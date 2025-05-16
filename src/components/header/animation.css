@@ -1,0 +1,24 @@
+@keyframes slideLogo {
+    0% {
+      transform: translateX(-100%); /* Start off-screen from the left */
+    }
+    100% {
+      transform: translateX(calc(100vw - 160px)); /* Adjust to stop near the profile image */
+    }
+  }
+  
+  .animated-logo {
+    position: absolute;
+    top: 0; /* Aligns vertically; adjust as needed */
+    left: 60px; /* Starting point, matching gautamLogo’s approximate position */
+    width: 80px;
+    height: 48px;
+    animation: slideLogo 3s ease-in-out forwards;
+  }
+  
+  .stopped-logo {
+    position: absolute;
+    right: 100px; /* Position near the profile section */
+    width: 80px;
+    height: 48px;
+  }

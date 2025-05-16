@@ -1,0 +1,119 @@
+/* Sidebar Container */
+.dashboard-sidebar-container {
+  height: 100vh;
+  width: 200px;
+  background-color: #ffffff; 
+  transition: width 0.4s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Collapsed Sidebar */
+.dashboard-sidebar-container.collapsed {
+  width: 0;
+  transition: width 0.4s ease-in-out;
+}
+
+/* Sidebar Links Wrapper */
+.sidebar-links-wrapper {
+  width: 100%;
+  flex-grow: 1; /* Allows full content visibility */
+  overflow-y: auto;
+  max-height: calc(100vh - 20px); /* Ensures full height utilization */
+  padding-bottom: 10px; /* Prevents last items from being cut off */
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #4d6bb2 #f1f1f1; /* Firefox */
+}
+
+/* Webkit (Chrome, Safari) Scrollbar Styling */
+.sidebar-links-wrapper::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-links-wrapper::-webkit-scrollbar-thumb {
+  background-color: #4d6bb2; /* Scrollbar color */
+  border-radius: 5px;
+}
+
+.sidebar-links-wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Scrollbar track color */
+}
+
+/* Prevent scrollbar hiding when sidebar is collapsed */
+.dashboard-sidebar-container.collapsed .sidebar-links-wrapper {
+  overflow: hidden;
+}
+
+/* Sidebar List Items */
+.sidebar-links-wrapper li {
+  width: 100%;
+}
+
+.sidebar-links-wrapper li a,
+.sidebar-links-wrapper li button {
+  display: block;
+  padding: 10px 10px;
+  font-family: sans-serif;
+  font-weight: 600;
+  letter-spacing: 1px;
+  font-size: 13px;
+  text-transform: capitalize;
+  color: #4d6bb2;
+  display: flex;
+  align-items: center;
+  gap: 10px; 
+  transition: all 0.3s ease-in-out;
+  white-space: nowrap; /* Prevents text wrapping */
+}
+
+/* Hover Effect */
+.sidebar-links-wrapper li a:hover {
+  background-color: #a6eef1;
+}
+
+/* Active Link */
+.active {
+  background-color: #d0f8f9;
+}
+
+/* Parent Menu */
+.parent-link {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+}
+
+/* Child Links (Dropdown) */
+.child-links {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  opacity: 0;
+}
+
+.child-links li {
+  height: 42px;
+  width: 100%;
+  padding: 0;
+  font-size: 12px;
+}
+
+.child-links li a {
+  width: 100%;
+  font-size: 12px;
+  padding-left: 16px;
+}
+
+/* Smooth Expand Animation */
+.child-links.smooth {
+  opacity: 1;
+  transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+/* Hide Child Links when Sidebar is Collapsed */
+.dashboard-sidebar-container.collapsed .child-links {
+  display: none;
+}

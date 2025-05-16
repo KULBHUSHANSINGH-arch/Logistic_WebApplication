@@ -1,0 +1,173 @@
+.add-vehicle-conatiner{
+    /* background-color: #383F51; */
+    width: 100%;
+   min-height: 100vh; 
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    /* margin-left: 10%; */
+
+}
+.add-vehicle-conatiner .add-vehicle-header{
+display: flex;
+flex-direction: column-reverse;
+gap: 10px;
+/* border: 2px solid green; */
+align-items: center;
+/* background-color: #DDDBF1; */
+padding: 20px 30px;
+}
+.add-vehicle-conatiner .add-vehicle-header h1{
+    font-size: 26px;
+    letter-spacing: 1px;
+    font-family: sans-serif;
+    font-weight: 700;
+    color: rgb(94, 91, 91);
+    
+    text-transform: capitalize;
+}
+.add-vehicle-conatiner .add-vehicle-header div{
+    height: 80px;
+    width: 80px;
+    overflow: hidden;
+    border-radius: 50%;
+}
+.add-vehicle-conatiner .add-vehicle-header img{
+    object-fit: contain;
+    height: 100%;
+    width: 100%;
+    background-color: white;
+}
+
+.add-vehicle-form-wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background-color: #DDDBF1;
+    height: calc(100vh - 170px);
+}
+
+.add-vehicle-form{
+width: 80%;
+background-color:white;
+display: flex;
+flex-wrap: wrap;
+justify-content: flex-start;
+padding: 22px 30px;
+border-radius: 4px;
+gap: 25px;
+}
+
+.add-vehicle-form div{
+    width: 28%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-start;
+    /* border: 2px solid green; */
+    padding: 0px;
+    /* margin: 10px 0px; */
+}
+
+.add-vehicle-form div label{
+    display: block;
+    font-size: 15px;
+    text-transform: capitalize;
+    color: gray;
+    font-weight: 600;
+    letter-spacing: 2px;
+    font-family: sans-serif;
+    width: 100%;
+}
+.add-vehicle-conatiner div input{
+    width: 100%;
+    padding: 12px 16px ;
+    border-radius: 4px;
+    background-color: rgb(228, 226, 226);
+    font-size: 14px;
+    font-family: sans-serif;
+
+    
+}
+.add-vehicle-form .vehicle-image{
+    margin: 10px auto;
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+}
+.add-vehicle-form .vehicle-image img{
+    height: 100%;
+    width: 100%;
+    object-fit: fill;
+}
+.add-vehicle-form .vehicle-entry-btn {
+    width: 100%;
+    /* border: 2px solid green; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+
+.add-vehicle-conatiner .vehicle-entry-btn button[type="submit"] {
+    outline: none;
+    border: none;
+    background-color: rgb(235, 113, 27);
+    color: white;
+    padding: 8px 30px;
+    font-size: 16px;
+    text-transform: capitalize;
+    font-family: sans-serif;
+    width: 200px;
+    cursor: pointer;
+    display: flex; /* Make sure this remains */
+    align-items: center; /* This will align spinner and text in the center vertically */
+    justify-content: center; /* Horizontally center both spinner and text */
+    gap: 5px; /* This is fine to maintain space between spinner and text */
+}
+
+.add-vehicle-conatiner .vehicle-entry-btn .cancel{
+    outline: none;
+    border: none;
+    background-color: rgb(220, 58, 58);
+    color: white;
+    padding: 8px 30px;
+    font-size: 16px;
+    text-transform: capitalize;
+    font-family: sans-serif;
+    width: 200px;
+    cursor: pointer;
+    display: flex; /* Make sure this remains */
+    align-items: center; /* This will align spinner and text in the center vertically */
+    justify-content: center; /* Horizontally center both spinner and text */
+    gap: 5px; /* This is fine to maintain space between spinner and text */
+}
+
+
+.add-vehicle-conatiner .error{
+    font-size: 12px;
+    font-family: sans-serif;
+    letter-spacing: 1px;
+    text-transform: capitalize;
+    color: red;
+    text-align: left;
+    
+}
+
+.add-vehicle-input-wrapper select {
+   width: 100%;
+   padding: 15px 16px ;
+    border-radius: 4px;
+    background-color: rgb(228, 226, 226);
+    font-size: 14px;
+    font-family: sans-serif;
+
+  }
+  .add-vehicle-input-wrapper input::placeholder{
+    font-size: 14px;
+    color: rgb(72, 72, 72);
+    text-transform: capitalize;
+    font-family: sans-serif;
+    font-weight: 600;
+  }
+  

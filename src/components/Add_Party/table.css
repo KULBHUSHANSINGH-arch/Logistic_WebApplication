@@ -1,0 +1,241 @@
+.item-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border: 10px solid green;
+  }
+  
+  .item-text {
+    margin-right: 8px;
+  }
+  
+  .btn-link {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0 !important;
+    font-size: 24px !important;
+  }
+  
+  .input-field {
+    width: 100%;
+    padding: 7px;
+    box-sizing: border-box;
+    border: 1px solid black !important;
+    border-radius: 4px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  
+  .input-field:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+  
+  .is-invalid {
+    border-color: #dc3545 !important;
+  }
+  
+  .invalid-feedback {
+    color: #dc3545 !important;
+    display: block !important;
+  }
+  
+  .css-19z1ozs-MuiPaper-root-MuiAppBar-root {
+    background-color: #a20000 !important;
+  }
+  
+  .css-1191obr-MuiPaper-root-MuiAppBar-root {
+    background-color: #a20000 !important;
+  }
+  
+  /* .card{
+      height: 500px!important;
+  } */
+  canvas {
+    height: 370px !important;
+  
+  }
+  
+  canvas:hover {
+    cursor: pointer !important;
+  }
+  
+  .card1 canvas {
+    margin-left: 80px;
+  }
+  
+  /* DataTableComponent.css */
+  
+  .plus img {
+    width: 100%;
+    max-width: 50px;
+    height: auto;
+  }
+  
+  @media (max-width: 768px) {
+    .plus img {
+      max-width: 50px;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .plus img {
+      max-width: 50px;
+    }
+  }
+  
+  .export-button {
+    margin-left: 1px;
+    white-space: nowrap;
+  }
+  
+  @media (min-width: 1200px) {
+  
+    .container,
+    .container-lg,
+    .container-md,
+    .container-sm,
+    .container-xl {
+      max-width: 100% !important;
+     
+    }
+  }
+  
+  
+  /* Loader Css */
+  
+  .spinner {
+    width: 40px;
+    height: 40px;
+  
+    position: relative;
+    margin: 100px auto;
+  }
+  
+  .double-bounce1,
+  .double-bounce2 {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #333;
+    opacity: 0.6;
+    position: absolute;
+    top: 0;
+    left: 0;
+  
+    -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+    animation: sk-bounce 2.0s infinite ease-in-out;
+  }
+  
+  .double-bounce2 {
+    -webkit-animation-delay: -1.0s;
+    animation-delay: -1.0s;
+  }
+  
+  @-webkit-keyframes sk-bounce {
+  
+    0%,
+    100% {
+      -webkit-transform: scale(0.0)
+    }
+  
+    50% {
+      -webkit-transform: scale(1.0)
+    }
+  }
+  
+  @keyframes sk-bounce {
+  
+    0%,
+    100% {
+      transform: scale(0.0);
+      -webkit-transform: scale(0.0);
+    }
+  
+    50% {
+      transform: scale(1.0);
+      -webkit-transform: scale(1.0);
+    }
+  }
+  
+  .css-13cymwt-control {
+    border-color: black !important;
+  }
+  
+  /* Tooltip css */
+  
+  .custom-tooltip .p-tooltip-text {
+    background: #a20000 !important;
+    color: 2px Solid #fff !important;
+    border-radius: 4px;
+    padding: 5px;
+  }
+  
+  .custom-tooltip .p-tooltip-arrow {
+    border-top-color: #a20000;
+    border-bottom-color: #a20000;
+  }
+  .modal-backdrop.show {
+    background-color: transparent; 
+  }
+  
+  .modal-content {
+    background-color: white;
+  }
+
+
+  /***  ------------- Inside color  ------------------------*/
+  .gradient-bg {
+    background: linear-gradient(to bottom, #d2ffd1, #EBC0B9, #c0f0ff);
+    color: #000;
+}
+
+.datatable-filter-demo .p-datatable-tbody td:hover {
+  overflow: auto;
+}
+
+/* -------------------selecting the  Every Table Data ------------- */
+.datatable-filter-demo * {
+  user-select: text; 
+}
+
+.datatable-filter-demo td, .datatable-filter-demo th {
+  cursor: text; 
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+  text-align: left;
+  border: 1px solid #e9ecef;
+  border-width: 0 0 1px 0;
+  padding: 1rem 1rem;
+  cursor: text; 
+}
+.custom-button {
+  background-color: #689F38;
+  width: 100px;
+  height: 40px;
+  color: #FFFFFF;
+  border-radius: 0;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  justify-content: center;    
+  align-items: center;    
+  padding: 0;
+}
+.custom-button .p-button-icon {
+  margin-right: 6px;           
+}
+.custom-button .p-button-label {
+               
+  text-align: left;        
+}
+.custom-checkbox .form-check-input {
+  border: 2px solid #4CAF50 !important; /* Green border color */
+}
+
+.custom-checkbox .form-check-input:checked {
+  background-color: #4CAF50 !important; /* Green checked color */
+  border-color: #4CAF50 !important;
+}

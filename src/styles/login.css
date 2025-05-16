@@ -1,0 +1,180 @@
+
+
+.login-container{
+  margin: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: rgb(177, 163, 163); */
+    @apply bg-gradient-to-b from-teal-200 to-blue-500;
+    width: 100%;
+    height:100vh ;
+    /* border: 2px solid green; */
+    /* padding-top: 30px; */
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px 30px;
+    border-radius: 8px;
+    background-color: #fff;
+    min-width: 350px;
+    box-shadow: rgba(255, 255, 255, 0.35) 0px 5px 15px;
+  }
+  
+  
+.login-form .login-header{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.login-form .login-header h1{
+    font-size: 20px;
+    text-transform: capitalize;
+    color: rgb(197, 22, 22);
+    letter-spacing: 1px;
+    font-weight: 600;
+    font-family: sans-serif;
+}
+
+
+/* Styling the input wrapper */
+.login-form .input-wrapper {
+    position: relative;
+    margin-bottom: 20px;
+  }
+ /* Input field styling */
+.login-form .input-wrapper input {
+    width: 100%;
+    padding: 16px 20px; 
+    border-radius: 30px; 
+    background: linear-gradient(135deg, #ffffff, #cecccc); 
+    border: 2px solid transparent;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1); 
+    font-size: 16px;
+    color: #040404; 
+    transition: all 0.3s ease;
+    outline: none;
+    font-family: sans-serif;
+    font-weight: bold;
+    
+}
+
+/* Input field hover and focus states */
+.login-form .input-wrapper input:focus {
+    background-color: #ffffff;
+    border: 2px solid #007bff; 
+    box-shadow: 0px 12px 25px rgba(0, 123, 255, 0.2); 
+}
+
+/* Placeholder styling */
+.login-form .input-wrapper input::placeholder {
+    font-size: 15px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    text-transform: capitalize;
+    color: #717171; 
+}
+
+/* Input hover effect */
+.login-form .input-wrapper input:hover {
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.15); 
+}
+
+  /* Error state with red border */
+  .login-form .input-wrapper input.error {
+    border: 2px solid red;
+    background-color: #535151;
+  }
+  
+  /* Styling the error message */
+  .login-form .error-field {
+    font-size: 14px;
+    color: red;
+    margin-top: 6px;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  /* Password label styling */
+  .login-form .input-wrapper label {
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    color: #161616;
+    display: block;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 800;
+    margin-left: 10px;
+  }
+  
+  /* Input hover effect */
+  .login-form .input-wrapper input:hover {
+    box-shadow: 0 6px 12px rgba(46, 45, 45, 0.15);
+  }
+  
+
+  .login-form input[type="submit"] {
+    width: 100%;
+    font-size: 16px;
+    text-transform: capitalize;
+    background: linear-gradient(135deg, #ff1e1e, #6b3232); 
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    color: white;
+    padding: 12px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 50px; 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+    transition: all 0.3s ease; 
+}
+
+.login-form input[type="submit"]:hover {
+    background: linear-gradient(135deg, #6a3d3d, #e93535);
+    transform: translateY(-2px); 
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); 
+}
+
+.login-form input[type="submit"]:active {
+    transform: translateY(0); 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+}
+
+
+.login-form .error-field{
+    display: block;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: capitalize;
+    font-family: sans-serif;
+    color: red;
+    font-family: sans-serif;
+}
+.input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .input-with-icon input {
+    width: 100%;
+    padding-right: 40px;
+  }
+  
+  .toggle-icon {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    font-size: 18px; 
+    color: #999; 
+  }
+  
+  .toggle-icon:hover {
+    color: #333; 
+  }
+  

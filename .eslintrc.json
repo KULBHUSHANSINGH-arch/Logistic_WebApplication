@@ -1,0 +1,24 @@
+{
+    "parser": "babel-eslint",
+    "extends": [
+      "eslint:recommended",
+      "plugin:react/recommended"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 2020,
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "jsx": true
+      }
+    },
+    "rules": {
+      "react/react-in-jsx-scope": "off",  // Not required in React 17+
+      "react/prop-types": "off"            // Disable prop-types if using TypeScript
+    },
+    "settings": {
+      "react": {
+        "version": "detect"                 // Automatically detect the React version
+      }
+    }
+  }
+  

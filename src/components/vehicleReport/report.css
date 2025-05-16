@@ -1,0 +1,70 @@
+/* Main container */
+.main-container-report {
+  display: flex;
+  flex-direction: column;
+min-height: calc(100vh - 50px);
+  padding: 0 10px;
+  /* border: 2px solid green; */
+  /* position: relative; */
+}
+
+
+/* Header section */
+/* .header-report {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 99%;
+  height: 40px;
+  padding: 6px 20px;
+  gap: 20px;
+  background-color: #f5f5f5; 
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+} */
+
+/* Filter Section */
+/* .filter-section {
+
+  height: auto;
+  max-height: 500px; 
+  overflow: hidden;
+width: 99%;
+  background-color: #fff;
+  border-radius: 4px;
+  padding: 10px 0px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); 
+
+ 
+
+} */
+/* 
+.filter-section.height-collapsed{
+ display: none;
+  padding: 0px 0px;
+} */
+
+
+
+
+/* Table Section */
+/* .table-section.margin-remove{
+  margin-top: 50px;
+ 
+} */
+/* .table-section {
+ 
+
+height: calc(100vh - 100px);
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+
+} */
+
+
+
+
+/* Table Section Full Height */
+

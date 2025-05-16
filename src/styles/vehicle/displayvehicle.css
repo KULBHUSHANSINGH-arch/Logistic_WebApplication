@@ -1,0 +1,19 @@
+/* .display-vehicle-box {
+
+    max-height: calc(100vh - 200px); 
+    height: auto; 
+    overflow-y: auto; 
+} */
+
+/* .display-vehicle-box {
+    max-height: calc(100vh - 200px);
+    height: auto;
+    overflow-y: auto; 
+} */
+
+
+.display-vehicle-box {
+    max-height: calc(100vh - 200px);  /* Maximum height constraint */
+    height: auto;  /* Let the height adjust based on content */
+    overflow-y: auto;  /* Scroll when content exceeds max-height */
+}
