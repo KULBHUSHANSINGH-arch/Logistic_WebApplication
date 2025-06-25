@@ -304,6 +304,7 @@ function NewParty() {
 
     const updatedFormData = {
       ...formData,
+      UpdatedBy: user.personId,
       State: formData.State?.name || "",
       PartyNameId: PartyNameId ? PartyNameId : "",
       PartyName: formData?.PartyName?.trim(),

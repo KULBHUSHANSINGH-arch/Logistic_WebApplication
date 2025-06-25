@@ -1148,7 +1148,7 @@ const SalesListTable = () => {
     // Function to render truncated text with a tooltip
     const renderAddress = (rowData) => {
         const maxLength = 30; // Define the max length to display
-        const address = rowData.fullDeliveryAddress;
+        const address = rowData.isSameAsDelieveryAdd === '1' ? rowData.fullCustomerAddress : rowData.fullDeliveryAddress;
 
         return (
             <MaterialToolTip
@@ -1159,9 +1159,11 @@ const SalesListTable = () => {
                     tooltip: { sx: { pointerEvents: "auto", userSelect: "text" } },
                 }}
             >
-                <span style={{ userSelect: "text", cursor: "text" }}>
-                    {address.length > maxLength ? `${address.slice(0, maxLength)}...` : address}
-                </span>
+              <span style={{ userSelect: "text", cursor: "text" }}>
+  {address?.length > maxLength
+    ? `${address.slice(0, maxLength)}...`
+    : address || "N/A"}
+</span>
             </MaterialToolTip>
         );
     };

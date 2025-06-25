@@ -46,8 +46,6 @@ const Sales = () => {
   const { salesOrderItemId } = location.state || {};
   const [totalAmount, setTotalAmount] = useState('');
   const [BillingId, setBillingId] = useState('');
-
-
   const [errors, setErrors] = useState({});
   const [DispatchList, setDispatchList] = useState([]);
   const [paymentTerms1, setPaymentTerm1] = useState("100% before dispatch");
@@ -56,26 +54,48 @@ const Sales = () => {
   const [productwarranty, setProductwarranty] = useState("");
   const [warranty, setWarranty] = useState("25");
   const [WarrantyList, setWarrantyList] = useState([]);
-
   const [companyName, setCompanyName] = useState("");
   const [bank, setBankName] = useState("");
   const [lcNumber, setLcNumber] = useState("");
   const [lcDate, setLcDate] = useState("");
   const [setStatus] = useState(null);
-
   const [salesPersonList, setSalesPersonList] = useState([])
   const [createdBy, setCreatedBy] = useState('');
   const [createdByError, setCreatedByError] = useState('');
-
   const [panelPrice, setPrice] = useState();
-
   const [FullAddress, setFullAddress] = useState("");
   const [fullCustomerAddress, setFullCustomerAddress] = useState('');
   const [fullCustomerAddressList, setFullCustomerAddressList] = useState([]);
+  const [billingSelectedState, setBillingSelectedState] = useState("");
+  const [deliveryState, setDeliveryState] = useState("");
+  const [isSameAsDelieveryAdd, setIsSameAsDelieveryAdd] = useState(false);
+  const [statelist, setStateList] = useState([]);
 
 
-
-  // console.log('createdBy', createdBy )
+   useEffect(() => {
+      const fetchStates = async () => {
+        try {
+          const response = await fetch(`${dev}/party/getStates`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+  
+          if (!response.ok) {
+            throw new Error("Failed to fetch states");
+            // notifyError();
+          }
+  
+          const data = await response.json();
+          setStateList(data);
+        } catch (error) {
+          console.error("Error fetching states:", error);
+        }
+      };
+  
+      fetchStates();
+    }, []);
 
   // fetching sales person list---------
   const fetchSalesPersnLists = async () => {
@@ -91,31 +111,22 @@ const Sales = () => {
       if (!resp.ok) {
         setLoading(false);
         setSalesPersonList([])
-        // toast.error("Sales Person list fetching failed");
         return;
       }
       setLoading(false);
       const data = await resp.json()
-      // console.log('Person data', data)
       setSalesPersonList(data.allList);
     } catch (error) {
       setLoading(false);
-      // console.log('fetching sales person failed', error);
       toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
-
   };
 
   useEffect(() => {
     fetchSalesPersnLists()
   }, [])
-
-
-
-  // const [salesOrderData,setSalesOrderData] = useState([])
-  // const [selectedDeliveryId, setSelectedDeliveryId] = useState("");
 
   // checking user status-------------------------------
   useEffect(() => {
@@ -134,16 +145,12 @@ const Sales = () => {
         }
 
         const data = await response.json();
-
         if (data?.status?.toLowerCase() === "inactive") {
           handleClick();
         }
-
-        // setError('');
       } catch (err) {
         setStatus(null);
         console.log("error", err);
-        // setError('Employee not found or an error occurred.');
       }
     };
     checkStatus();
@@ -155,10 +162,8 @@ const Sales = () => {
 
   const getWarranty = async () => {
     try {
-      const response = await axios.get(`${dev}/sales/getWaranty`);
+      const response = await axios.get(`https://www.umanlogistics.info/api/sales/getWaranty`);
       const { data } = response;
-
-      // console.log("Checking the warranty List", data);
       setWarrantyList(data);
     } catch (error) {
       console.error("Error fetching warranty list:", error);
@@ -174,9 +179,7 @@ const Sales = () => {
     try {
       const response = await axios.post(`${dev}/vehicleIN/getDispatchLocations`);
       const { data } = response;
-
-      // console.log("Checking the Dispatch List", data);
-      setDispatchList(data); // Set the fetched dispatch list data
+      setDispatchList(data); 
     } catch (error) {
       console.error("Error fetching dispatch list:", error);
     }
@@ -189,11 +192,15 @@ const Sales = () => {
 
   ];
 
-  const BankList = [
-    { value: 'HDFC', label: 'HDFC' },
-    { value: 'ICICI', label: 'ICICI' }
-
-  ];
+  const BankList = paymentTerms === "LC" 
+  ? [
+      {value: 'South Indian Bank Ltd', label: 'South Indian Bank Ltd'},
+      {value: 'THE SARASWAT CO-OPERATIVE BANK', label : 'THE SARASWAT CO-OPERATIVE BANK'} 
+    ]
+  : [
+      { value: 'HDFC', label: 'HDFC' },
+      { value: 'ICICI', label: 'ICICI' }
+    ];
 
   const [items, setItems] = useState([{
     id: 1,
@@ -203,11 +210,9 @@ const Sales = () => {
     dcr_nondcr: '',
     MonofacialBifacial: '',
     MBT: "",
-
     isReplacement: false,
     quantity: '',
     unitPrice: '',
-    // panelPrice:'',
     value: '',
     GST: '',
     IGST: '',
@@ -216,18 +221,15 @@ const Sales = () => {
     totalAmount: '',
   }]);
 
-  // console.log("itemssssss", partyList);//
-
   useEffect(() => {
     const currentUser = localStorage.getItem("currentUser");
     setPersonId(currentUser);
-    // console.log('currentUser data ID ', salesOrderId);/
   }, []);
 
   const formatDateForBackend = (dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString);
-    return date.toDateString(); // Returns format like "Tue Nov 05 2024"
+    return date.toDateString(); 
   };
 
   const formatDateForInput = (dateString) => {
@@ -235,9 +237,6 @@ const Sales = () => {
     const date = new Date(dateString);
     return date.toISOString().split('T')[0];
   };
-
-  // console.log('personId data', personId);
-
   const notifySuccess = () =>
     toast.success(
       salesOrderId
@@ -248,7 +247,6 @@ const Sales = () => {
 
   const fetchPartyList = async () => {
     const personId = localStorage.getItem('currentUser')
-    // console.log('PERSONiDDDDDDDDD', personId);
     try {
       setLoading(true);
       const resp = await fetch(`${dev}/party/getSalesParty`, {
@@ -265,10 +263,7 @@ const Sales = () => {
       }
       const data = await resp.json();
       const partyData = data.data || [];
-
       setPartyList(partyData);
-      // console.log('checking party list data', partyData);
-
     } catch (error) {
       Toast.error("Something went wrong");
     } finally {
@@ -276,59 +271,13 @@ const Sales = () => {
     }
   };
 
-  // const getDeliveryAddressByPartyName = async () => {    
-  //   if (!customerName) return;
-  //   try {
-  //     setLoading(true);
-  //     const resp = await fetch(`${dev}/party/getDeliveryAddByPartyName`, {
-  //       method: 'POST',
-  //       body: JSON.stringify({ PartyNameId: customerName }),
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //     });
-
-  //     const result = await resp.json();
-  //     if (!resp.ok) {
-  //       setDeliveryList([]);
-  //       setLoading(false);
-  //       notifySuccess();
-  //       return Toast.error('Delivery address not found');
-  //     }
-
-  //     const deliveryData = result.data || [];
-  //     setDeliveryList(deliveryData);
-  //     console.log("hiiiiii");
-
-  //     if (deliveryData.length > 0) {
-  //       console.log("Delivery Address List:", deliveryData);
-  //       const selectedDelivery = deliveryData.find(
-  //         (deliv) => deliv.deliveryId === deliveryAddress
-  //       );
-  //       setDeliveryStateCode(selectedDelivery?.deliveryStateCode || '');
-  //       console.log("Selected Delivery:", selectedDelivery?.deliveryStateCode);
-  //     } else {
-
-  //       // toast.warn('Delivery list is empty or undefined, or selectedDeliveryId is not set.');
-  //     }
-  //     // if (deliveryData.length > 0) {
-  //     //   const { deliveryStateCode } = deliveryData[0];
-  //     //   setDeliveryStateCode(deliveryStateCode);
-  //     // }
-  //   } catch (error) {
-  //     Toast.error('Fetching delivery address failed');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const getDeliveryAddressByBilling = async () => {
     if (!customerName) return;
     try {
       setLoading(true);
       const resp = await fetch(`${dev}/party/getDeliveryAddByPartyName`, {
         method: 'POST',
-        body: JSON.stringify({ PartyNameId: customerName, type: 'Billing' }),
+        body: JSON.stringify({ PartyNameId: customerName, type: 'Billing', state: billingSelectedState }),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -343,29 +292,20 @@ const Sales = () => {
       }
 
       const billingData = result.data || [];
-      // console.log('checking the Billing Type', billingData);
-
       setFullCustomerAddressList(billingData);
-      // console.log("hiiiiii");
-
       if (billingData.length > 0) {
-        // console.log("Delivery Address List:", billingData);
         const selectedfullCustomerAddress = billingData.find(
           (deliv) => deliv.deliveryId === fullCustomerAddress
         );
-
-
         console.log('checking the Billing id', selectedfullCustomerAddress.deliveryId);
-
         if (selectedfullCustomerAddress) {
-          // setFullCustomerAddress(selectedfullCustomerAddress.Address);
-          // setBillingId(selectedfullCustomerAddress.deliveryId);
-          // setBillingId(selectedfullCustomerAddress.deliveryId);
           console.log('checking the Billing Customer Id', selectedfullCustomerAddress.deliveryId);
         }
       }
     } catch (error) {
-      Toast.error('Fetching delivery address failed');
+      console.log("error");
+      
+      // Toast.error('Fetching delivery address failed');
     } finally {
       setLoading(false);
     }
@@ -377,7 +317,7 @@ const Sales = () => {
       setLoading(true);
       const resp = await fetch(`${dev}/party/getDeliveryAddByPartyName`, {
         method: 'POST',
-        body: JSON.stringify({ PartyNameId: customerName, type: 'Delivery' }),
+        body: JSON.stringify({ PartyNameId: customerName, type: 'Delivery', state: deliveryState}),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -390,18 +330,14 @@ const Sales = () => {
         notifySuccess();
         return Toast.error('Delivery address not found');
       }
-
       const deliveryData = result.data || [];
       setDeliveryList(deliveryData);
-      // console.log("hiiiiii");
 
       if (deliveryData.length > 0) {
-        // console.log("Delivery Address List:", deliveryData);
         const selectedDelivery = deliveryData.find(
           (deliv) => deliv.deliveryId === deliveryAddress
         );
         setDeliveryStateCode(selectedDelivery?.deliveryStateCode || '');
-        // console.log("Selected Delivery:", selectedDelivery?.deliveryStateCode);
       }
     } catch (error) {
       Toast.error('Fetching delivery address failed');
@@ -410,58 +346,43 @@ const Sales = () => {
     }
   };
 
-  // useEffect(() => {
-  //   getDeliveryAddressByPartyName();
-  // }, [customerName]);
   useEffect(() => {
-    getDeliveryAddressByBilling();
-    getDeliveryAddressByDelivery();
-  }, [customerName]);
+    console.log("biling state", billingSelectedState, 'company name', companyName);
+     if (billingSelectedState && customerName) {
+      getDeliveryAddressByBilling();
+      }
+  }, [billingSelectedState, customerName]);
 
   useEffect(() => {
-    // console.log('checking the PI Api', Type);
+     if (deliveryState && customerName) {
+    getDeliveryAddressByDelivery();
+  }
+  }, [deliveryState, customerName])
+
+  useEffect(() => {
     fetchPartyList();
     if ((salesOrderId === "" || salesOrderId === undefined || salesOrderId === null) || (Type === 'Resend')) {
-      // console.log("naveeeeen 11");
       getPINumber();
-
-
-
     }
-    // console.log('party all ', PurchaseData)
   }, []);
   useEffect(() => {
-    // console.log('checking the PI Api', Type);
     if (companyName && Type == "Resend") {
       getPINumbers();
 
     }
-    // console.log('party all ', PurchaseData)
   }, [companyName]);
 
   const getPINumbers = async () => {
-    // Check if companyName is selected
-    // if (!companyName) {
-    //   console.error("Error: No company name selected");
-
-    //   setErrors((prevErrors) => ({ ...prevErrors, piNo: "Please select a company name" }));
-    //   return;
-    // }
-
     try {
-      // console.log('checking Get PI Number');
       const response = await axios.post(`${dev}/sales/getPiNo`, {
         companyName: companyName.trim(),
       });
       const piNo = response.data.piNo;
-      // console.log('checking Get PI Number Response', response.data.piNo);
       if (companyName === "Gautam Solar Pvt Ltd") {
         setPiNo(`GSPL/25-26/${piNo}`);
       } else if (companyName === "Galo Energy Pvt Ltd") {
         setPiNo(`GEPL/25-26/${piNo}`);
       }
-
-      // console.log("Company Name", companyName);
     } catch (error) {
       console.error("Error Fetching in PI number:", error);
       setErrors((prevErrors) => ({ ...prevErrors, piNo: "Error fetching PI number" }));
@@ -470,28 +391,21 @@ const Sales = () => {
 
 
   const getPINumber = async () => {
-    // Check if companyName is selected
     if (!companyName) {
-      // console.error("Error: No company name selected");
-
       setErrors((prevErrors) => ({ ...prevErrors, piNo: "Please select a company name" }));
       return;
     }
-
     try {
-      // console.log('checking Get PI Number');
       const response = await axios.post(`${dev}/sales/getPiNo`, {
         companyName: companyName.trim(),
       });
       const piNo = response.data.piNo;
-      // console.log('checking Get PI Number Response', response.data.piNo);
       if (companyName === "Gautam Solar Pvt Ltd") {
         setPiNo(`GSPL/25-26/${piNo}`);
       } else if (companyName === "Galo Energy Pvt Ltd") {
         setPiNo(`GEPL/25-26/${piNo}`);
       }
 
-      // console.log("Company Name", companyName);
     } catch (error) {
       console.error("Error Fetching in PI number:", error);
       setErrors((prevErrors) => ({ ...prevErrors, piNo: "Error fetching PI number" }));
@@ -500,12 +414,9 @@ const Sales = () => {
 
   useEffect(() => {
     if (companyName && (salesOrderId === "" || salesOrderId === undefined || salesOrderId === null)) {
-      // console.log("naveeeeen 12");
       getPINumber();
     }
   }, [companyName]);
-
-
 
   const handleCancel = () => {
     navigate('/sales-order');
@@ -522,9 +433,7 @@ const Sales = () => {
   };
 
   const fetchChildData = (data) => {
-    // console.log('Data received in fetchChildData:', data);
-    // setChildData(data);
-    setItems(data);      // Also updates items
+    setItems(data);     
   };
   const fetchPanelPrice = async (dcr_nondcr, wattage, MonofacialBifacial, MBT, itemId) => {
     try {
@@ -560,24 +469,19 @@ const Sales = () => {
     if (!fullCustomerAddress) newErrors.fullCustomerAddress = 'Billing Address is required.';
     if (!companyName) newErrors.companyName = 'Company Name is required.';
     if (user.designation === 'Super Admin' && !createdBy) newErrors.createdBy = 'Select Sales Person'
-
-    // if (!bank) newErrors.bank = 'Bank Name is required.';
     if (companyName === "Gautam Solar Pvt Ltd" && !bank && paymentTerms === "RTGS/NEFT") {
       newErrors.bank = 'Bank Name is required.';
     }
-
+    if(!billingSelectedState) newErrors.billingState = 'Billing State is required';
+    if (!isSameAsDelieveryAdd && !deliveryState) {
+  newErrors.deliveryState = "Delivery State is required";
+}
     if (!paymentTerms) newErrors.paymentTerms = 'Payment Mode is required.';
-    // if (!destination) newErrors.destination = 'Destination is required.';
-    // if (!purchaseOrderNo) newErrors.purchaseOrderNo = 'PO Number  is required.';
     if (!placeOfDispatch) newErrors.placeOfDispatch = 'Place of Dispatch is required.';
-
     if (!paymentTerms1) newErrors.paymentTerms1 = 'Place of paymentTerms1 is required.';
     if (!incoTerms) newErrors.incoTerms = 'Place of incoTerms is required.';
     if (!insurance) newErrors.insurance = 'Place of insurance is required.';
     if (!warranty) newErrors.warranty = 'Place of warranty is required.';
-    // if (!productwarranty) newErrors.productwarranty = 'Place of productwarranty is required.';
-
-
     if (!deliveryTerms) newErrors.deliveryTerms = 'Delivery Term is required.';
     if (!isAdvancePayment) newErrors.isAdvancePayment = 'Advance Payment is required.';
     if (purchaseOrderNo && !poDate) {
@@ -585,11 +489,6 @@ const Sales = () => {
     } else if (!purchaseOrderNo && !poDate) {
       delete newErrors.poDate;
     }
-
-    // if (!poDate) newErrors.poDate = 'PO Date is required.';
-    // if (purchaseOrderNo && !poDate) {
-    //   newErrors.poDate = 'Purchase Order Date is required ';
-    // }
 
     if (isAdvancePayment === "Yes") {
       if (!advanceAmount) {
@@ -604,52 +503,27 @@ const Sales = () => {
         delete newErrors.expectedDateOfPayment;
       }
     }
-    // if (isAdvancePayment === "No") {
-    //   if (!expectedDateOfPayment) {
-    //     newErrors.expectedDateOfPayment = 'Expected Payment Date is required.';
-    //   }
-    // }
 
     const itemErrors = items.reduce((acc, item) => {
       const itemError = {};
       if (!item.quantity) itemError.quantity = 'Quantity is required';
-
       if (!item.MonofacialBifacial) itemError.MonofacialBifacial = 'Module Type is required';
       if (!item.MBT) itemError.MBT = 'Monofacial Bifacial  is required';
-
       if (!item.dcr_nondcr) itemError.dcr_nondcr = 'DCR Non Dcr is required';
       if (!item.watage) itemError.watage = 'Watage is required';
-      // if (!item.unitPrice) itemError.unitPrice = 'Unit Price is required';
       if (!item.totalAmount) itemError.totalAmount = 'Total Amount is required';
       if (item.isReplacement !== "true" && !item.unitPrice) {
         itemError.unitPrice = 'Unit Price is required';
       }
-      // console.log("panelPricesstttt", item.panelPrice, item.unitPrice, item.isReplacement);
       const panelPrice = Number(item.panelPrice) || 0;
       const unitPrice = Number(item.unitPrice) || 0;
-
-      // Ensure isReplacement is treated as a boolean
       const isReplacement = String(item.isReplacement).toLowerCase() === 'true';
-
-      // Debugging Logs
-      // console.log("Panel Price:", panelPrice);
-      // console.log("Unit Price:", unitPrice);
-      // console.log("Is Replacement (Parsed):", isReplacement);
-      // console.log("!isReplacement:", !isReplacement);
-      // console.log("panelPrice > unitPrice:", panelPrice > unitPrice);
-
       if (!isReplacement && panelPrice > unitPrice) {
         // console.log("✅ Validation Triggered");
         itemError.unitPrice = `Please Enter Minimum Price of ${panelPrice}`;
       } else {
         // console.log("❌ Validation Failed");
       }
-
-
-
-
-
-
       if (Object.keys(itemError).length > 0) {
         acc[item.id] = itemError;
       }
@@ -665,30 +539,23 @@ const Sales = () => {
   };
 
   useEffect((e) => {
-
     if (items?.[0]?.quantity || items?.[0]?.qty || items?.[0]?.price) {
       validateForm();
     }
   }, [items]);
 
 
-
-
   const handleSubmit = async (e) => {
-    // console.log('ccccccccccccccccccccccccccccc');
-    // console.log('checking all data',PurchaseData )
-
-
+    console.log("Inside handle submit");
     if ((salesOrderId === "" || salesOrderId === undefined || salesOrderId === null) || (Type === 'Resend')) {
-      // console.log("naveeeeen");
       getPINumber();
     }
     e.preventDefault();
-
-
+    console.log("one more step");
     if (!validateForm()) {
       return;
     }
+    console.log("second step")
 
     /**   Clear LC fields when payment mode is RTGS/NEFT  **/
     const lcData = paymentTerms === "LC"
@@ -698,21 +565,14 @@ const Sales = () => {
       }
       : { lcDate: "", lcNumber: "" };
 
-    /** when advanceAmount will be cleared if isAdvancePayment is "No" ::::
-     
-    JB isAdvancePayment  amount No Hoga tb advanceAmount Null ho jayega
-     
-     */
     if (isAdvancePayment === "No") {
       setAdvanceAmount("");
     }
-
 
     const processedItems = items.map(item => ({
       ...item,
       MonofacialBifacial: `${item.MonofacialBifacial || ""} ${item.MBT || ""}`,
     }));
-
 
     const withoutIgst = processedItems.map((item) => {
       const { IGST, ...rest } = item;
@@ -724,22 +584,20 @@ const Sales = () => {
     );
 
     const finalDeliveryId = selectedDelivery ? selectedDelivery.deliveryId : "";
-
-    console.log("Selected Delivery ID:", finalDeliveryId);
-
     const PurchaseData = {
       salesID: salesOrderId && (Type != 'Resend') ? salesOrderId : "",
       salesOrderItemId,
       customerName,
       customerId: BillingId,
-      deliveryAddress,
+      deliveryAddress: isSameAsDelieveryAdd ? BillingId : deliveryAddress,
       companyName,
       bank,
       ...lcData,
-      // lcNumber,
-      // lcDate,
       piNo,
       purchaseOrderNo,
+      billingState: billingSelectedState,
+      deliveryState: deliveryState,
+      isSameAsDelieveryAdd,
       paymentTerms,
       deliveryTerms,
       deliveryStateCode,
@@ -752,7 +610,7 @@ const Sales = () => {
       productwarranty,
       destination,
       isAdvancePayment,
-      advanceAmount,  /** when  advanceAmount will be cleared if isAdvancePayment is "No" */
+      advanceAmount,  
       expectedDateOfPayment: formatDateForBackend(expectedDateOfPayment),
       poDate: formatDateForBackend(poDate),
       date,
@@ -763,10 +621,7 @@ const Sales = () => {
 
     };
 
-    // console.log("Payload Data ", PurchaseData);
-
-
-
+    console.log("payload", PurchaseData);
 
     setLoading(true);
     try {
@@ -776,7 +631,6 @@ const Sales = () => {
         { headers: { 'Content-Type': 'application/json; charset=UTF-8', } }
       );
       if (response.status === 200) {
-        // console.log('Form submitted successfully:', response.data);
         notifySuccess();
         setTimeout(() => {
           setLoading(false);
@@ -798,63 +652,46 @@ const Sales = () => {
     const date = new Date(dateString);
     if (date instanceof Date && !isNaN(date)) {
       const year = date.getFullYear();
-      const month = ("0" + (date.getMonth() + 1)).slice(-2); // Adds leading zero for month
-      const day = ("0" + date.getDate()).slice(-2); // Adds leading zero for day
-      return `${year}-${month}-${day}`; // Return in "yyyy-mm-dd" format
+      const month = ("0" + (date.getMonth() + 1)).slice(-2); 
+      const day = ("0" + date.getDate()).slice(-2);
+      return `${year}-${month}-${day}`; 
     }
-    return ''; // Return empty string if invalid date
+    return ''; 
   };
-
-
-
 
   /**Binding the data */
   useEffect(() => {
-    // console.log('Child data:', childData);
     const personId = localStorage.getItem('currentUser');
-    // console.log('Binding the Person Id checking', personId);
     if (salesOrderId && partyList.length > 0) {
       setLoading(true);
       axios.post(`${dev}/sales/getSalesDetails`, { salesID: salesOrderId, personId, status: selectedStatus })
         .then((response) => {
           const salesDataArray = response.data.data;
-          // console.log("API Response:", salesDataArray);
           const salesOrderData = salesDataArray.find(item => item.salesOrderId === salesOrderId);
-          // const salesOrderData = salesDataArray.find(item => item.salesOrderId === salesOrderId);
           console.log('checking Status', selectedStatus);
-
-
-          // console.log('RE Check Full Customer Address : ', salesOrderData.fullCustomerAddress);
-
           if (salesOrderData) {
             setCustomerName(salesOrderData.customerName || '');
             setPartyNameId(salesOrderData.PartyNameId || '');
-            setDeliveryAddress(salesOrderData.deliveryAddress || '');
+            setDeliveryAddress( salesOrderData.isSameAsDelieveryAdd === '1' ? salesOrderData.fullCustomerAddress : salesOrderData.deliveryAddress || '');
             setFullCustomerAddress(salesOrderData?.fullCustomerAddress || '');
+            setBillingSelectedState(salesOrderData?.billingState || "");
+            setDeliveryState(salesOrderData?.deliveryState || "");
+            setIsSameAsDelieveryAdd(salesOrderData?.isSameAsDelieveryAdd === '1' || false)
             setBillingId(salesOrderData?.customerId || '');
-
-            console.log('checking Customer full address', salesOrderData.fullCustomerAddress);
-            console.log('checking Customer 444444', salesOrderData.customerId);
-
             setCompanyName(salesOrderData.companyName || '');
             setBankName(salesOrderData.bank || '');
             setLcNumber(salesOrderData.lcNumber || '');
-            // setLcDate(salesOrderData.lcDate || '');
-            // setLcDate(formatLcDateForInput(salesOrderData.lcDate || ''));
             setLcDate(formatLcDateForInput(salesOrderData.lcDate || ''));
-
             setPiNo(salesOrderData.piNo || '');
             setPurchaseOrderNo(salesOrderData.purchaseOrderNo || '');
             setPaymentTerms(salesOrderData.paymentTerms || 'LC');
             setDeliveryTerms(salesOrderData.deliveryTerms || '');
             setPlaceOfDispatch(salesOrderData.placeOfDispatch || '');
-
             setPaymentTerm1(salesOrderData.paymentTerms1 || '100% before dispatch');
             setIncoTerms(salesOrderData.incoTerms || 'Freight charges is inclusive');
             setInsurance(salesOrderData.insurance || 'Transit insurance inclusive');
             setProductwarranty(salesOrderData.warranty || '');
             setWarranty(salesOrderData.productwarranty || '25');
-
             setDestination(salesOrderData.destination || '');
             setIsAdvancePayment(salesOrderData.isAdvancePayment || 'Yes');
             setAdvanceAmount(salesOrderData.advanceAmount || '');
@@ -867,57 +704,22 @@ const Sales = () => {
 
             if (partyList.length > 0) {
               const selectedParty = partyList.find(party => party.PartyNameId === salesOrderData.PartyNameId);
-
-              // console.log('Selected Party:', selectedParty);
-              // console.log('partyStateCode:', selectedParty.partyStateCode);
               setPartyStateCode(selectedParty.partyStateCode || '');
-
-
             }
             else {
               console.warn("PartyNameId not provided or partyList is empty.");
             }
-
-
             // Attempt to bind salesItems array
             if (salesOrderData.salesItems?.length > 0) {
-
               const mappedItems = salesOrderData.salesItems.map((item, index) => {
-
-                // const keywords = ["Monofacial", "Bifacial"];
-                // let beforeKeyword = "";
-                // let keyword = "";
-
-                // Find the keyword in the string
-                // const foundKeyword = keywords.find((key) => item?.MonofacialBifacial?.includes(key));
-                // if (foundKeyword) {
-                //   // Split the string at the found keyword
-                //   const parts = item?.MonofacialBifacial.split(foundKeyword);
-                //   beforeKeyword = parts[0]?.trim() || "";
-                //   keyword = foundKeyword;
-                // } else {
-                //   console.warn(`No matching keyword found in: ${item.MonofacialBifacial}`);
-                //   beforeKeyword = item?.MonofacialBifacial || "Unknown";
-                // }
-
-
-
-
-                // console.log('sales order data', salesOrderData);
                 return {
-
                   id: index + 1 || '',
                   salesOrderItemId: item.salesOrderItemId && (Type != 'Resend') || '',
                   HS: item.HS || '',
                   watage: item.watage || '',
                   dcr_nondcr: item.dcr_nondcr || '',
-                  // MonofacialBifacial: beforeKeyword, 
-                  // MBT: keyword,
-                  // Category: MonofacialBifacial,
-                  // Category: MBT,
                   MBT: item.Category || '',
                   MonofacialBifacial: item.TypeMono || '',
-
                   isReplacement: item.isReplacement === "true" || item.isReplacement === 'true' ? "true" : "false",
                   quantity: item.quantity || '',
                   unitPrice: item.unitPrice || '',
@@ -925,26 +727,17 @@ const Sales = () => {
                   GST: item.GST || '',
                   IGST: item.value && item.GST
                     ? (Number(item.value) + Number(item.value) * (Number(item.GST) / 100)).toFixed(2)
-                    : '', // Calculate IGST or set empty string if value or GST is missing
+                    : '', 
                   CGST: item.CGST || '',
                   SGST: item.SGST || '',
                   totalAmount: item.totalAmount || '',
                   itemDescription: item.itemDescription || '',
-
-
-
                 };
-
-
               });
-
-              // console.log('igst coming', salesOrderData.salesItems)
               setItems(mappedItems);
-
               mappedItems.forEach((item) => {
                 fetchPanelPrice(item.dcr_nondcr, item.watage, item.MonofacialBifacial, item.MBT, item.id, item.personId);
               });
-              // console.log("Mapped Items set to state:", mappedItems);
             }
 
 
@@ -969,7 +762,7 @@ const Sales = () => {
 
   const clearError = (fieldName) => {
     setErrors((prevErrors) => {
-      const { [fieldName]: _, ...rest } = prevErrors; // Remove the specific field's error
+      const { [fieldName]: _, ...rest } = prevErrors; 
       return rest;
     });
   };
@@ -1006,53 +799,15 @@ const Sales = () => {
         <div className={`form-content ${loading ? 'blurred' : ''}`}>
           <Image src={img1} alt="" className="text-center" rounded style={{ width: '25%', marginLeft: "36%" }} />
           <h2 className="text-center" style={{ color: '#2c3e50', fontWeight: 'bold', fontSize: '24px', marginTop: "12px", marginBottom: '12px', textShadow: '1px 1px 2px rgba(0, 0, 0, 0.1)' }}>
-            {/* {salesOrderId ? "Edit  Sales Order" : "Sales Order" }  */}
             {salesOrderId ? (Type !== 'Resend' ? "Edit Sales Order" : "Make PI with Same Data") : "Sales Order"}
-
           </h2>
-
           <div className="container mt-5">
             <div className="card" style={{ borderBottomLeftRadius: '0px', borderBottomRightRadius: '0px', borderBottom: '0px' }}>
               <div className="card-body">
-                <form
-                >
-
-                  {/* Select sales for Only Super admin */}
-
+                <form>
                   <div className="row g-3 mb-3">
                     {
-                      user.designation === 'Super Admin' && (
-                        // <div className="col-md-4">
-                        //   <label htmlFor="companyName" className="form-label">
-                        //     Sales Executive<span className="star" style={{ color: 'red' }}>*</span>
-                        //   </label>
-                        //   <select
-                        //     style={{ border: errors?.createdBy ? '2px solid red' : '2px solid black' }}
-                        //     id="salesExecutive"
-                        //     className="form-select"
-                        //     value={createdBy}
-                        //     // onChange={handleCompanyChange}
-                        //     onChange={(e) => {
-
-                        //       setCreatedBy(e.target.value)
-
-                        //       if (e.target.value) {
-                        //         setErrors((prevErrors) => ({...prevErrors, createdBy: '' }));
-                        //       }
-
-                        //     }}
-                        //     required
-
-                        //   >
-                        //     <option value="">Select Sales Executive</option>
-                        //     {salesPersonList.map((option) => (
-                        //       <option key={option.personId} value={option.personId}>
-                        //         {option.userName}
-                        //       </option>
-                        //     ))}
-                        //   </select>
-                        //   {errors?.createdBy && <div className="text-danger">{errors?.createdBy}</div>}
-                        // </div>
+                      user.designation === 'Super Admin' && (                        
                         <div className="col-md-4">
                           <label htmlFor="salesExecutive" className="form-label">
                             Sales Executive<span className="star" style={{ color: 'red' }}>*</span>
@@ -1084,7 +839,6 @@ const Sales = () => {
                         id="companyName"
                         className="form-select"
                         value={companyName}
-                        // onChange={handleCompanyChange}
                         onChange={(e) => {
                           const selectedCompanyName = e.target.value;
                           clearError('companyName')
@@ -1122,13 +876,8 @@ const Sales = () => {
                       />
                     </div>
 
-
-
-
                   </div>
-
                   <div className="row g-3 mb-3">
-
                     <div className="col-md-4">
                       <label htmlFor="date" className="form-label">Date<span className="star" style={{ color: 'red' }}>*</span></label>
                       <input
@@ -1164,11 +913,9 @@ const Sales = () => {
                         type="date"
                         id="poDate"
                         value={poDate}
-
-                        // onChange={(e) => handlePoDateChange(e)}
                         onChange={(e) => {
                           setPoDate(e.target.value);
-                          clearError('poDate'); // Clear error on change
+                          clearError('poDate'); 
                         }}
                         required
                         style={{ border: errors.poDate ? '2px solid red' : '2px solid black' }}
@@ -1209,14 +956,10 @@ const Sales = () => {
                           const selectedParty = partyList.find(
                             (party) => party.PartyNameId === selectedOption.value
                           );
-                          setCustomerName(selectedOption.value); // Set only the ID
-                          // setPartyStateCode(selectedParty ? selectedParty.partyStateCode : '');
-                          setDeliveryAddress('');                 
+                          setCustomerName(selectedOption.value);
+                          setDeliveryAddress('');
                           setFullCustomerAddress('');
-                          setDestination('');
-                          // console.log('Selected Party State Code:', selectedParty?.partyStateCode);
-                          // console.log('Selected Party:', selectedParty);
-                          // setFullAddress(selectedParty ? selectedParty.FullAddress : '');
+                          setDestination('');                    
                         }}
                         placeholder="Select a Customer"
                       />
@@ -1226,40 +969,65 @@ const Sales = () => {
                     </div>
 
                   </div>
-
+                  
                   <div className="row g-3 mb-3">
+
+                    <div className="col-md-4">
+    <label htmlFor="billingState" className="form-label">
+      Billing State<span className="star" style={{ color: 'red' }}>*</span>
+    </label>
+    <select
+      id="billingState"
+      className="form-select"
+      value={billingSelectedState}
+      onChange={(e) => {
+        if(isSameAsDelieveryAdd){
+          setDestination('');
+          setDeliveryAddress('');
+        }
+        setBillingSelectedState(e.target.value);
+        setIsSameAsDelieveryAdd(false);
+        setFullCustomerAddress("");
+        // clearError('billingState');
+        clearError('billingState');
+      }}
+      style={{ border: errors.billingState ? '2px solid red' : '2px solid black' }}
+    >
+      <option value="" disabled>Select a State</option>
+      {statelist.length > 0 ? (
+        statelist.map((state) => (
+          <option key={state.isoCode} value={state.name}>
+            {state.name}
+          </option>
+        ))
+      ) : (
+        <option disabled>No states available</option>
+      )}
+    </select>
+    {errors.billingState && (
+      <div className="text-danger">{errors.billingState}</div>
+    )}
+  </div>
+
+                    {/* Billing Address */}
                     <div className="col-md-4">
                       <label htmlFor="FullAddress" className="form-label">
                         Billing Address<span className="star" style={{ color: 'red' }}>*</span>
                       </label>
-
-
                       <select
                         id="fullCustomerAddress"
                         className="form-select"
                         value={fullCustomerAddress}
                         onChange={(e) => {
                           const selectedfullCustomerAddress = fullCustomerAddressList.find(
-                            (deliv) => deliv.Address === e.target.value
-                            // (deliv) => deliv.deliveryId === e.target.value
+                            (deliv) => deliv.Address === e.target.value                         
                           );
-                          console.log('changing data', selectedfullCustomerAddress);
-
-                          // setFullCustomerAddress(e.target.value); // Update selected billing address
                           setFullCustomerAddress(selectedfullCustomerAddress ? selectedfullCustomerAddress.Address : '');
-                          // setDeliveryStateCode(selectedfullCustomerAddress ? selectedfullCustomerAddress.deliveryStateCode : '');
                           setPartyStateCode(selectedfullCustomerAddress ? selectedfullCustomerAddress.deliveryStateCode : '');
-                          // setDeliveryStateCode(selectedfullCustomerAddress ? selectedfullCustomerAddress.deliveryStateCode : '');
-                          setDestination(selectedfullCustomerAddress ? selectedfullCustomerAddress.dispatchAddress : '');
-                          console.log('ttttttttttttttttt', selectedfullCustomerAddress.deliveryStateCode);
-                          // ✅ Set Delivery ID to Customer ID
                           setBillingId(selectedfullCustomerAddress ? selectedfullCustomerAddress.deliveryId : '');
-
-                          // ✅ Console Log for Debugging
-                          console.log("Selected Delivery ID:", selectedfullCustomerAddress ? selectedfullCustomerAddress.deliveryId : '');
-                          console.log("Updated Customer ID:", selectedfullCustomerAddress ? selectedfullCustomerAddress.deliveryId : '');
-
-
+                          if(isSameAsDelieveryAdd){
+                            setDestination(selectedfullCustomerAddress ? selectedfullCustomerAddress.dispatchAddress : '');
+                          }
                           clearError('fullCustomerAddress');
                         }}
                         disabled={loading}
@@ -1280,10 +1048,82 @@ const Sales = () => {
                       {errors.fullCustomerAddress && <div className="text-danger">{errors.fullCustomerAddress}</div>}
                     </div>
 
+                    <div className="form-check mt-4">
+      <input
+        className="form-check-input"
+        type="checkbox"
+        id="sameAsDelivery"
+        checked={isSameAsDelieveryAdd}
+        onChange={(e) => {
+          const isChecked = e.target.checked;
+          setIsSameAsDelieveryAdd(isChecked);
+          if (isChecked && fullCustomerAddress) {
+            const selectedfullCustomerAddress = fullCustomerAddressList.find(
+              (deliv) => deliv.Address === fullCustomerAddress                         
+            );
+            setDeliveryAddress(fullCustomerAddress);
+            setDestination(selectedfullCustomerAddress.dispatchAddress)
+          }else{
+            setDeliveryAddress('');
+            setDestination('');
+          }
+        }}
+      />
+      <label className="form-check-label" htmlFor="sameAsDelivery">
+        Delivery Address same as Billing Address
+      </label>
+    </div>
+
+    {/* {Delivery State} */}
+    {
+      !isSameAsDelieveryAdd && (
+
+        <div className="col-md-4">
+    <label htmlFor="deliveryState" className="form-label">
+      Delivery State<span className="star" style={{ color: 'red' }}>*</span>
+    </label>
+    <select
+      id="deliveryState"
+      className="form-select"
+      value={deliveryState}
+      onChange={(e) => {
+        setDeliveryState(e.target.value);
+        setDeliveryAddress('');
+        clearError('deliveryState');
+      }}
+      style={{ border: errors.deliveryState ? '2px solid red' : '2px solid black' }}
+    >
+      <option value="" disabled>Select a State</option>
+      {statelist.length > 0 ? (
+        statelist.map((state) => (
+          <option key={state.isoCode} value={state.name}>
+            {state.name}
+          </option>
+        ))
+      ) : (
+        <option disabled>No states available</option>
+      )}
+    </select>
+    {errors.deliveryState && (
+      <div className="text-danger">{errors.deliveryState}</div>
+      )}
+  </div>
+      )}
+
+                    {/* Delivery Address */}
                     <div className="col-md-4">
                       <label htmlFor="companyName" className="form-label">
                         Delivery Address<span className="star" style={{ color: 'red' }}>*</span>
                       </label>
+                      {isSameAsDelieveryAdd ? (
+    // Show plain text when checkbox is checked
+    <div
+      className="form-control"
+      style={{ backgroundColor: "#f8f9fa", border: "1px solid #ced4da" }}
+    >
+      {fullCustomerAddress || "No billing address selected"}
+    </div>
+  ) : (
                       <select
                         style={{ border: errors.deliveryAddress ? '2px solid red' : '2px solid black' }}
                         id="companyName"
@@ -1314,21 +1154,11 @@ const Sales = () => {
                           <option disabled>No delivery addresses available</option>
                         )}
                       </select>
+                      )}
                       {errors.deliveryAddress && <div className="text-danger">{errors.deliveryAddress}</div>}
                     </div>
 
-                    {/* <div className="col-md-4">
-                      <label htmlFor="placeOfDispatch" className="form-label">Place of Dispatch<span className="star" style={{ color: 'red' }}>*</span></label>
-                      <Form.Control
-                        type="text"
-                        placeholder="Enter Place of Dispatch "
-                        value={placeOfDispatch}
-                        onChange={(e) => setPlaceOfDispatch(e.target.value)}
-                        required                       
-                        style={{ border: errors.placeOfDispatch ? '2px solid red' : '2px solid black' }}
-                      />
-                      {errors.placeOfDispatch && <div className="text-danger">{errors.placeOfDispatch}</div>}
-                    </div> */}
+                    {/* Place of Dispatch */}
                     <div className="col-md-4">
                       <label htmlFor="placeOfDispatch" className="form-label">
                         Place of Dispatch<span className="star" style={{ color: 'red' }}>*</span>
@@ -1355,10 +1185,10 @@ const Sales = () => {
                       {errors?.placeOfDispatch && <div className="text-danger">{errors.placeOfDispatch}</div>}
                     </div>
 
-
                   </div>
 
                   <div className="row g-3 mb-3">
+                    {/* Delivery Terms */}
                     <div className="col-md-4">
                       <label htmlFor="deliveryTerms" className="form-label">Delivery Terms<span className="star" style={{ color: 'red' }}>*</span></label>
                       <Form.Control
@@ -1375,17 +1205,16 @@ const Sales = () => {
                       />
                       {errors.deliveryTerms && <div className="text-danger">{errors.deliveryTerms}</div>}
                     </div>
-
+                    {/* Destination */}
                     <div className="col-md-4">
                       <label htmlFor="destination" className="form-label" >Destination<span className="star" style={{ color: 'red' }}>*</span></label>
                       <Form.Control
                         type="text"
                         placeholder="Enter destination "
                         value={destination}
-                        // onChange={(e) => setDestination(e.target.value)}
                         onChange={(e) => {
                           setDestination(e.target.value);
-                          clearError('destination'); // Clear error on change
+                          clearError('destination'); 
                         }}
                         required
                         disabled
@@ -1407,12 +1236,8 @@ const Sales = () => {
                           name="paymentTerms"
                           value="LC"
                           checked={paymentTerms === "LC"}
-                          // onChange={(e) => setPaymentTerms(e.target.value)}
-                          // onChange={handlePaymentTermssss}
                           onChange={(e) => {
                             setPaymentTerms(e.target.value);
-                            // clearError('paymentTerms'); // Clear error on change
-
                             setBankName("");
 
                           }}
@@ -1426,17 +1251,10 @@ const Sales = () => {
                           name="paymentTerms"
                           value="RTGS/NEFT"
                           checked={paymentTerms === "RTGS/NEFT"}
-                          // onChange={(e) => setPaymentTerms(e.target.value)}
-
-                          // onChange={handlePaymentTermssss}
-
                           onChange={(e) => {
                             setPaymentTerms(e.target.value);
-                            // if (selectedValue === "RTGS/NEFT") {
                             setLcNumber("");
                             setLcDate("");
-                            // }
-                            // clearError('paymentTerms'); // Clear error on change
                           }}
                           style={{ borderColor: errors.paymentTerms ? 'red' : 'black' }}
                         />
@@ -1452,7 +1270,6 @@ const Sales = () => {
                         type="text"
                         placeholder="Enter LC Number"
                         value={lcNumber}
-                        // onChange={(e) => setDeliveryTerms(e.target.value)}
                         onChange={(e) => {
                           setLcNumber(e.target.value);
                           clearError('lcNumber');
@@ -1469,7 +1286,6 @@ const Sales = () => {
                         type="date"
                         placeholder="Enter LC Date"
                         value={lcDate}
-                        // onChange={(e) => setDeliveryTerms(e.target.value)}
                         onChange={(e) => {
                           setLcDate(e.target.value);
                           clearError('lcDate');
@@ -1480,7 +1296,7 @@ const Sales = () => {
                       {errors.lcDate && <div className="text-danger">{errors.lcDate}</div>}
                     </div>)}
 
-                    {(companyName === "Gautam Solar Pvt Ltd" && paymentTerms === "RTGS/NEFT" && <div className="col-md-4">
+                    {(companyName === "Gautam Solar Pvt Ltd" && (paymentTerms === "RTGS/NEFT" || paymentTerms === "LC") && <div className="col-md-4">
                       <label htmlFor="bank" className="form-label">
                         Payment Bank<span className="star" style={{ color: 'red' }}>*</span>
                       </label>
@@ -1494,7 +1310,6 @@ const Sales = () => {
                           setBankName(selectBank);
                         }}
                         required
-                      // disabled={salesOrderId}
                       >
                         <option value="">Select Bank Name</option>
                         {BankList.map((option) => (
@@ -1560,7 +1375,6 @@ const Sales = () => {
                           type="number"
                           placeholder="Enter Amount"
                           value={advanceAmount}
-                          // onChange={(e) => setAdvanceAmount(e.target.value)}
                           onChange={(e) => {
                             setAdvanceAmount(e.target.value);
                             clearError('advanceAmount');
@@ -1577,7 +1391,6 @@ const Sales = () => {
                         <label htmlFor="expectedPaymentDate" className="form-label">
                           Expected payment Date <span className="star" style={{ color: 'red' }}>*</span>
                         </label>
-
                         <Form.Control
                           type="date"
                           id="expectedPaymentDate"
@@ -1587,7 +1400,6 @@ const Sales = () => {
                           style={{ border: errors.expectedDateOfPayment ? '2px solid red' : '2px solid black' }}
                           min={new Date().toISOString().split("T")[0]}
                         />
-
                         {errors.expectedDateOfPayment && <div className="text-danger">{errors.expectedDateOfPayment}</div>}
                       </div>
                     )}
@@ -1598,10 +1410,9 @@ const Sales = () => {
                         type="text"
                         placeholder="Enter payment Terms"
                         value={paymentTerms1}
-                        // onChange={(e) => setDeliveryTerms(e.target.value)}
                         onChange={(e) => {
                           setPaymentTerm1(e.target.value);
-                          clearError('paymentTerms1'); // Clear error on change
+                          clearError('paymentTerms1'); 
                         }}
                         required
                         style={{ border: errors.paymentTerms1 ? '2px solid red' : '2px solid black' }}
@@ -1615,10 +1426,9 @@ const Sales = () => {
                         type="text"
                         placeholder="Enter Inco Terms"
                         value={incoTerms}
-                        // onChange={(e) => setDeliveryTerms(e.target.value)}
                         onChange={(e) => {
                           setIncoTerms(e.target.value);
-                          clearError('incoTerms'); // Clear error on change
+                          clearError('incoTerms'); 
                         }}
                         required
                         style={{ border: errors.incoTerms ? '2px solid red' : '2px solid black' }}
@@ -1631,33 +1441,16 @@ const Sales = () => {
                         type="text"
                         placeholder="Enter insurance Terms"
                         value={insurance}
-                        // onChange={(e) => setDeliveryTerms(e.target.value)}
                         onChange={(e) => {
                           setInsurance(e.target.value);
-                          clearError('insurance'); // Clear error on change
+                          clearError('insurance'); 
                         }}
                         required
                         style={{ border: errors.insurance ? '2px solid red' : '2px solid black' }}
                       />
                       {errors.insurance && <div className="text-danger">{errors.insurance}</div>}
                     </div>
-                    {/* <div className="col-md-4">
-                      <label htmlFor="productwarranty" className="form-label">Productwarranty Terms<span className="star" style={{ color: 'red' }}>*</span></label>
-                      <Form.Control
-                        type="text"
-                        placeholder="Enter productwarranty Terms"
-                        value={productwarranty}
-                        // onChange={(e) => setDeliveryTerms(e.target.value)}
-                        onChange={(e) => {
-                          setProductwarranty(e.target.value);
-                          clearError('productwarranty'); // Clear error on change
-                        }}
-                        required
-                        style={{ border: errors.productwarranty ? '2px solid red' : '2px solid black' }}
-                      />
-                      {errors.productwarranty && <div className="text-danger">{errors.productwarranty}</div>}
-                    </div> */}
-
+                    
                     <div className="col-md-4">
                       <label htmlFor="warranty" className="form-label">
                         Warranty<span className="star" style={{ color: 'red' }}>*</span>

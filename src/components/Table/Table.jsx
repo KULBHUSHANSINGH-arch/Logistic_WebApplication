@@ -67,31 +67,6 @@ const ItemTable = ({ fetchChildData, fetchPanelPrice, setItems, items, setAmount
     };
     setItems([...items, newItem]);
   };
-  // const fetchPanelPrice = async (dcr_nondcr, wattage,MonofacialBifacial,MBT ,itemId) => {
-  //   try {
-  //     const response = await axios.post(`${dev}/sales/getPanelPrice`, {
-  //       PanelDcr_nondcr: dcr_nondcr,
-  //       wattage: wattage,
-  //       moduleType:MonofacialBifacial,
-  //       monobi:MBT
-  //     });
-
-  //     const { data } = response.data;
-  //     const panelPrice = data[0].PanelPrice;
-
-  //     // Update the specific item with its panelPrice
-  //     setItems(prevItems =>
-  //       prevItems.map(item =>
-  //         item.id === itemId ? { ...item, panelPrice } : item
-  //       )
-  //     );
-
-  //     validateUnitPriceForItem(itemId, panelPrice);
-  //   } catch (error) {
-  //     console.error("Error fetching panel price:", error);
-  //   }
-  // };
-
 
   const validateUnitPriceForItem = (itemId, panelPrice) => {
     setItems(prevItems => {
@@ -146,20 +121,12 @@ const ItemTable = ({ fetchChildData, fetchPanelPrice, setItems, items, setAmount
           if (item.isReplacement !== "true" && Number(value) < panelPrice) {
             newErrors.items[id].unitPrice = `Unit price cannot be less than ${panelPrice}`;
           } else {
-            // Remove the error if price is valid
             if (newErrors.items[id].unitPrice) {
               delete newErrors.items[id].unitPrice;
             }
           }
-
-          // Update the errors state
           setErrors(newErrors);
         }
-
-        // if (name === "MonofacialBifacial") {
-        //   updatedItem.MonofacialBifacial = value;
-        // }
-
         if (name === "MBT") {
           updatedItem.MonofacialBifacial = value;
         }
@@ -168,77 +135,46 @@ const ItemTable = ({ fetchChildData, fetchPanelPrice, setItems, items, setAmount
           (name === 'watage' && updatedItem.dcr_nondcr) ||
           (name === 'MonofacialBifacial' && updatedItem.MonofacialBifacial) ||
           (name === 'MBT' && updatedItem.MBT)
-
-
-
         ) {
-          // Fetch panel price when both values are available
           fetchPanelPrice(updatedItem.dcr_nondcr, updatedItem.watage, updatedItem.MonofacialBifacial, updatedItem.MBT, id, updatedItem.personId);
         }
         if (
 
           ['dcr_nondcr', 'watage', 'MonofacialBifacial', 'MBT', 'isReplacement'].includes(name)
         ) {
-          updatedItem.unitPrice = ''; // Reset unit price
+          updatedItem.unitPrice = ''; 
         }
-
-
-        // Calculate value (quantity * unitPrice)
         if (name === 'quantity' || name === 'unitPrice') {
           const quantity = name === 'quantity' ? Number(value) : Number(item.quantity);
           const unitPrice = name === 'unitPrice' ? Number(value) : Number(item.unitPrice);
           updatedItem.value = quantity * unitPrice;
 
         }
-
-
-
-
         // Calculate totalAmount
         const itemValue = Number(updatedItem.value) || 0;
         const gstAmount = itemValue * (Number(updatedItem.GST) / 100) || 0;
-        const igstAmount = itemValue * (Number(updatedItem.GST) / 100) || 0
-        // const cgstAmount = itemValue * (Number(updatedItem.CGST) / 100) || 0;
-        // const sgstAmount = itemValue * (Number(updatedItem.SGST) / 100) || 0;
-
-        // if (updatedItem.GST) {
-        //   updatedItem.IGST = (igstAmount + itemValue)
-        // }
-
+        const igstAmount = itemValue * (Number(updatedItem.GST) / 100) || 0     
         if (updatedItem.GST) {
-          updatedItem.IGST = igstAmount.toFixed(2);  // Correct IGST calculation
+          updatedItem.IGST = igstAmount.toFixed(2);  
         } else {
-          updatedItem.IGST = '';  // Clear IGST when GST is empty
+          updatedItem.IGST = ''; 
       }
-
         updatedItem.totalAmount = (
           itemValue +
           gstAmount
-          // igstAmount +
-          // cgstAmount +
-          // sgstAmount
         ).toFixed(2);
-
         return updatedItem;
-
       }
       return item;
     });
-
-
     setItems(updatedItems);
-
-
     validateField(updatedItems, name, value);
     fetchChildData(updatedItems);
   };
 
-
   const validateField = (updatedItems, name) => {
     let newErrors = { ...errors };
-
     switch (name) {
-
       case 'isReplacement':
       case 'MonofacialBifacial':
       case 'dcr_nondcr':
@@ -249,7 +185,6 @@ const ItemTable = ({ fetchChildData, fetchPanelPrice, setItems, items, setAmount
           return 'this is required ';
         }
         break;
-
       case 'value':
       case 'unitPrice':
       case 'GST':
@@ -264,14 +199,10 @@ const ItemTable = ({ fetchChildData, fetchPanelPrice, setItems, items, setAmount
 
     setErrors(newErrors);
   };
-
   const handleDeleteRow = id => {
-    // console.log("iddddddd", id);
-
     const updatedItems = items.filter((item, index) => index === 0 || item.id !== id);
     setItems(updatedItems);
   };
-
 
   const MBTList = [
     { value: 'Monofacial', label: 'Monofacial' },
@@ -283,15 +214,6 @@ const ItemTable = ({ fetchChildData, fetchPanelPrice, setItems, items, setAmount
     { value: 'Non DCR', label: 'Non DCR' }
   ];
 
-
-  // useEffect(() => {
-  //   const dd = items.map((item, index) => item.totalAmount);
-  //   console.log("hhhhhhhhhhh", dd);
-  //   const remaiinging = dd - advanceAmount;
-  //   setBalanceAmount(remaiinging);
-  // }, [advanceAmount])
-
-
   useEffect(() => {
     fetchWatageList();
     fetchMonoficial();
@@ -301,7 +223,6 @@ const ItemTable = ({ fetchChildData, fetchPanelPrice, setItems, items, setAmount
     try {
       const response = await axios.get(`${dev}/watage/getWatageList`);
       const { data } = response.data;
-
       setWatageList(data);
     } catch (error) {
       console.error("Error fetching watage list:", error);
@@ -327,10 +248,6 @@ const ItemTable = ({ fetchChildData, fetchPanelPrice, setItems, items, setAmount
     },
   };
 
-
-
-
-
   return (
     <Container className="my-9" >
       <Table striped bordered hover className="table" style={{ border: "2px solid black" }}>
@@ -346,11 +263,8 @@ const ItemTable = ({ fetchChildData, fetchPanelPrice, setItems, items, setAmount
           {items.map((item, index) => (
             <tr key={item.id}>
               <td>{index + 1}</td>
-
               <td >
-                {/* First Row of Fields with Labels */}
                 <Row>
-
                   <Col md={2} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <Form.Group style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                       <Form.Label style={{ marginBottom: '10px', textAlign: 'center' }}>Replacement</Form.Label>
@@ -570,15 +484,9 @@ const ItemTable = ({ fetchChildData, fetchPanelPrice, setItems, items, setAmount
                       />
                     </Form.Group>
                   </Col>
-
-
-
                 </Row>
-
                 {/* Conditional Rendering for Second Row of Fields with Labels */}
-
                 <Row className="mt-3">
-
                   <Col md={2}>
                     <Form.Group>
                       <Form.Label>GST (%)</Form.Label>
@@ -601,7 +509,6 @@ const ItemTable = ({ fetchChildData, fetchPanelPrice, setItems, items, setAmount
                         type="number"
                         name="IGST"
                         value={item.IGST}
-                        // value={item.IGST}
                         disabled
                         readOnly
                         onChange={(e) => handleItemChange(e, item.id)}
@@ -653,7 +560,6 @@ const ItemTable = ({ fetchChildData, fetchPanelPrice, setItems, items, setAmount
 
                         readOnly
                         disabled
-                      // onChange={(e) => handleItemChange(e, item.id)}
                       />
                     </Form.Group>
                     {errors.items && errors.items[item.id] && errors.items[item.id].totalAmount && (
@@ -662,13 +568,7 @@ const ItemTable = ({ fetchChildData, fetchPanelPrice, setItems, items, setAmount
                       </div>
                     )}
                   </Col>
-
                 </Row>
-
-
-
-
-
               </td>
               <td>
                 <Button variant="danger" onClick={() => handleDeleteRow(item.id)}>
@@ -676,10 +576,7 @@ const ItemTable = ({ fetchChildData, fetchPanelPrice, setItems, items, setAmount
                 </Button>
               </td>
             </tr>
-
           ))}
-
-
         </tbody>
       </Table>
 
@@ -692,24 +589,7 @@ const ItemTable = ({ fetchChildData, fetchPanelPrice, setItems, items, setAmount
           Add Row
         </Button>
       </div>
-
-      {/* <div className="col-md-4">
-        <label htmlFor="balanceAmount" className="form-label">
-          Balance Price <span className='star'>*</span>
-        </label>
-        <Form.Control
-          type="number"
-          id="balanceAmount"
-          value={balanceAmount}
-          // onChange={(e) => handleGrandPayment(e)}          
-          style={{ border: errors.balanceAmount ? '2px solid red' : '2px solid black' }}
-        />
-        {errors.balanceAmount && <div className="text-danger">{errors.balanceAmount}</div>}
-      </div> */}
-
     </Container>
-
   );
 }
-
 export default ItemTable;

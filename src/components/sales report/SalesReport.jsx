@@ -29,12 +29,12 @@ function SalesReport({ isCollapsed }) {
     const [modalLoading, setModalLoading] = useState(false)
 
     const handleOpen = (data) => {
-        console.log(data, 'clciked');
+        // console.log(data, 'clciked');
         setModalLoading(true)
         setIsModalOpen(true)
         setSingleRowData(data)
     };
-    console.log('obj',{h:'hii'})
+    // console.log('obj',{h:'hii'})
     const handleClose = () => setIsModalOpen(false);
     const [formData, setFormData] = useState({
         partyName: '',
@@ -48,7 +48,7 @@ function SalesReport({ isCollapsed }) {
         piNo: '',
         selectedLocationId: [] 
     })
-    console.log('form data', formData)
+    // console.log('form data', formData)
     const [isFilterVisible, setIsFilterVisible] = useState(true); // Toggle filter visibility
     const filterSectionRef = useRef(null); // Reference for the filter section
 
@@ -195,12 +195,12 @@ function SalesReport({ isCollapsed }) {
                 toast.success("Excel file generated and downloaded successfully!");
             })
                 .catch((error) => {
-                    console.error("Error exporting Excel file:", error);
+                    // console.error("Error exporting Excel file:", error);
                     toast.error("Failed to export Excel file. Please try again.");
                 });
 
         } catch (error) {
-            console.error("An error occurred:", error);
+            // console.error("An error occurred:", error);
             toast.error("An unexpected error occurred. Please try again later.");
         }
     }

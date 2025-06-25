@@ -111,7 +111,7 @@ const SalesReportFilter = ({ showTopSalesPerson, setShowTopSalesPerson, formData
             }
     
           } catch (error) {
-            console.log("Error fetching work locations:", error.message);
+            // console.log("Error fetching work locations:", error.message);
             toast.error("Failed to fetch work locations");
           }
         };
@@ -142,7 +142,7 @@ const SalesReportFilter = ({ showTopSalesPerson, setShowTopSalesPerson, formData
             setSalesPersonList(data.allList);
         } catch (error) {
             setLoading(false);
-            console.log('fetching sales person failed', error);
+            // console.log('fetching sales person failed', error);
             toast.error("Something went wrong");
         } finally {
             setLoading(false);
@@ -168,7 +168,7 @@ const SalesReportFilter = ({ showTopSalesPerson, setShowTopSalesPerson, formData
                 return;
             }
             const data = await resp.json();
-            console.log('pis', data)
+            // console.log('pis', data)
             setPiList(data.data);
         } catch (error) {
             toast.error("Something went wrong");
@@ -216,7 +216,7 @@ const SalesReportFilter = ({ showTopSalesPerson, setShowTopSalesPerson, formData
             setWatageList(data.data || null);
         } catch (error) {
             setLoading(false);
-            console.log('fetching watage failed', error);
+            // console.log('fetching watage failed', error);
             toast.error("Something went wrong");
         } finally {
             setLoading(false);
@@ -243,7 +243,7 @@ const SalesReportFilter = ({ showTopSalesPerson, setShowTopSalesPerson, formData
             setPanelTypeList(data.data || null);
         } catch (error) {
             setLoading(false);
-            console.log('fetching panel type failed', error);
+            // console.log('fetching panel type failed', error);
             toast.error("Something went wrong");
         } finally {
             setLoading(false);

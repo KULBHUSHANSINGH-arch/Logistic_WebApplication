@@ -56,7 +56,6 @@ const allLinks = [
       children: [],
       icon: <img src={SalesOrder} style={{ width: '30px', height: '30px' }} />,
     },
- 
     {
       name: "Sales Report",
       to: "/sales-report",
@@ -104,8 +103,7 @@ const allLinks = [
       to: "/watage",
       children: [],
       icon: <img src={Wattagebulb} style={{ width: '20px', height: '20px' }} />,
-    },
-    
+    }, 
     {
       name: "Panel Price List",
       to: "/panelpricelist",
